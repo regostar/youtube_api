@@ -5,4 +5,4 @@ class Video(models.Model):
     title = models.CharField(max_length=255, null=False) # youtube has 100 char limit
     description = models.TextField()
     publishing_datetime = models.DateTimeField()
-    thumbnails = models.TextField()
+    thumbnails = models.JSONField()
