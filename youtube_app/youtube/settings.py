@@ -135,5 +135,7 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-API_KEY = 'AIzaSyBuzEgSJgvGpfN3e2-m3q7Bq4LEAazRjnY'
+API_KEY = 'AIzaSyCkxZs7Vn7Za4zNibeqaazY3U9ZKq9_BNk'
 SEARCH_QUERY ='cricket'
+API_KEYS=['AIzaSyDbUIvW9x3_sVFAT5T5AZlbkVEy2V38ckY', 'AIzaSyCsCn7DSwudKqE4g20iLXmNErpAgv7kqAI',
+'AIzaSyDjPnXzI3k16_Szxr2znEtCuhfjfKjA77w', 'AIzaSyBbNdmw6pwx4FAkFUy7xNU5Ps1Gm84JhZk', 'AIzaSyBuzEgSJgvGpfN3e2-m3q7Bq4LEAazRjnY']

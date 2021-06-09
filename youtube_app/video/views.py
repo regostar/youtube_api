@@ -20,10 +20,16 @@ from django.shortcuts import render
 from django.db.models import Q
 
 def dashboard(request):
-    print(request.GET.get('search'))
-    videos_list = Video.objects.all().order_by('publishing_datetime')
+    # print()
+    search = request.GET.get('search', '')
+    if search:
+        videos_list = Video.objects.filter(Q(title__icontains=search) | Q(description__icontains=search)).order_by('publishing_datetime')
+        res = "Search results for "+ search
+    else:
+        videos_list = Video.objects.all().order_by('publishing_datetime')
+        res = ""
     paginator = Paginator(videos_list, 6) 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     print(page_obj)
-    return render(request, 'index.html', {'page_obj': page_obj})
+    return render(request, 'index.html', {'page_obj': page_obj, "res": res})

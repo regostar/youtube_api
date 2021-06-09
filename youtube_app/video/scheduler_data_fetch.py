@@ -10,15 +10,29 @@ from django.conf import settings
 def fetch_response_from_api():
     """[This function actually requests data from youtube api]
     """
-    params = {'part': 'snippet', 'key': settings.API_KEY,
-              'q': settings.SEARCH_QUERY, 'max_results': 1000}
+    attempts = 1
+
     url = 'https://www.googleapis.com/youtube/v3/search'
-    try:
-        response = requests.get(url=url, params=params)
-        json_data = response.json()
-    except requests.exceptions.RequestException as e:
-        print("Error ", str(e))
-        json_data = {}
+    redo = True
+    key = settings.API_KEYS[0]
+    nos = len(settings.API_KEYS)
+    while redo and attempts <10 :
+        try:
+            params = {'part': 'snippet', 'key': key,
+              'q': settings.SEARCH_QUERY, 'max_results': 1000}
+            response = requests.get(url=url, params=params)
+            json_data = response.json()
+            if 'error' in json_data:
+                key = settings.API_KEYS[(nos-1) % attempts]
+                attempts += 1
+            else:
+                redo = False
+        except requests.exceptions.RequestException as e:
+            print("Error ", str(e))
+            redo = True
+            json_data = {}
+            key = settings.API_KEYS[(nos-1) % attempts]
+            attempts += 1
     # print(json_data)
     return json_data
 
@@ -27,6 +41,7 @@ def save_in_database(json_response):
     """[Create an entry in database if the video does  not exist already]
     """
     from .models import Video
+    print(json_response)
     if 'items' in json_response:
         for each_video in json_response['items']:
             print(each_video)
