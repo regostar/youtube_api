@@ -13,9 +13,13 @@ def fetch_response_from_api():
     params = {'part': 'snippet', 'key': settings.API_KEY,
               'q': settings.SEARCH_QUERY, 'max_results': 1000}
     url = 'https://www.googleapis.com/youtube/v3/search'
-    response = requests.get(url=url, params=params)
-    json_data = response.json()
-    print(json_data)
+    try:
+        response = requests.get(url=url, params=params)
+        json_data = response.json()
+    except requests.exceptions.RequestException as e:
+        print("Error ", str(e))
+        json_data = {}
+    # print(json_data)
     return json_data
 
 
@@ -23,20 +27,21 @@ def save_in_database(json_response):
     """[Create an entry in database if the video does  not exist already]
     """
     from .models import Video
-    
-    for each_video in json_response['items']:
-        id = each_video['id']['videoId']
-        publishing_datetime = each_video['snippet']['publishedAt']
-        title = each_video['snippet']["title"]
-        description = each_video['snippet']["description"]
-        thumbnails = each_video['snippet']["thumbnails"]
-        if not Video.objects.filter(id=id).exists():
-            Video.objects.create(id=id, 
-                                publishing_datetime=publishing_datetime,
-                                title=title, 
-                                description=description, 
-                                thumbnails=thumbnails,
-                                )
+    if 'items' in json_response:
+        for each_video in json_response['items']:
+            print(each_video)
+            id = each_video['id']['videoId']
+            publishing_datetime = each_video['snippet']['publishedAt']
+            title = each_video['snippet']["title"]
+            description = each_video['snippet']["description"]
+            thumbnails = each_video['snippet']["thumbnails"]
+            if not Video.objects.filter(id=id).exists():
+                Video.objects.create(id=id, 
+                                    publishing_datetime=publishing_datetime,
+                                    title=title, 
+                                    description=description, 
+                                    thumbnails=thumbnails,
+                                    )
 
 
 
@@ -51,7 +56,7 @@ def youtube_sync():
 def begin():
     """[Schedules a task to fetch api response every 10 s]
     """
-    print("came here")
+    print("Async task begun!")
     # setup scheduler
     scheduler = BackgroundScheduler()
     scheduler.configure(timezone=utc)
@@ -59,4 +64,5 @@ def begin():
     # Create task
     scheduler.add_job(youtube_sync, 'interval', seconds=10)
 
+    # Begin the task
     scheduler.start()

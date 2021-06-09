@@ -84,7 +84,7 @@ WSGI_APPLICATION = 'youtube.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
+        'NAME': 'ytbdb',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
         'HOST': 'db',
