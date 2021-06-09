@@ -24,3 +24,10 @@ search and view pagenated results.
 By default it is pagenated sorted by published datetime.
 
 
+![dashboard](https://github.com/regostar/youtube_api/blob/main/img/1.png)
+
+
+![dashboard](https://github.com/regostar/youtube_api/blob/main/img/2.png)
+
+
+![search](https://github.com/regostar/youtube_api/blob/main/img/3.png)
